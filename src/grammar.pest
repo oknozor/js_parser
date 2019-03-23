@@ -2,22 +2,28 @@ WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
 COMMENT = _{ "/*" ~ (!"*/" ~ ANY)* ~ "*/" }
 SEMI_COL = _{";"}
 VAR = _{"var"}
-program = { SOI ~ statement* ~EOI }
+program = { statement* }
 
 // Statement
-statement = { expression_statement | declaration_statement }
+root = { statement+ }
+statement = { (expression_statement | declaration_statement) ~ SEMI_COL? }
 expression_statement = { expression }
-declaration_statement = { VAR ~ expression+  }
+declaration_statement = { variable_declaration }
+variable_declaration = { VAR ~ variable_declarator+ }
+variable_declarator = { identifier ~ ("=" ~ expression)? }
+
 
 // Expressions
 expression = { literal | assignment_expression }
 
-assignment_expression = { identifier ~ assignment_operator ~ expression+ ~ SEMI_COL}
+assignment_expression = { identifier ~ assignment_operator ~ expression+ }
 assignment_operator = { "=" | "+=" | "-=" | "*=" |"/=" |"%=" |"<<=" | ">>=" |">>>="|"|=" |"^=" | "&=" }
 
 // Literals
 literal = { string | bool | number }
-bool = { "true" | "false" }
+bool = { bool_true | bool_false }
+bool_true = { "true" }
+bool_false = { "false" }
 string = ${ "\"" ~ inner ~ "\"" }
 inner = @{ char* }
 char = {
@@ -29,4 +35,4 @@ number = { float | integer }
 integer = { ASCII_DIGIT+ }
 float = { ASCII_DIGIT+ ~ "." ~ ASCII_DIGIT+ }
 
-identifier = { !( ASCII_DIGIT | " " | "\t" | VAR ) ~ ANY }
+identifier = { !( ASCII_DIGIT | " " | "\t" | VAR | SEMI_COL) ~ ANY }

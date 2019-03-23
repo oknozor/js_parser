@@ -8,4 +8,3 @@ Work in progress.
 ## Todo 
 
 - implement the whole [ES5 spec](https://github.com/estree/estree/blob/master/es5.md)
-- fix prec-climbing for left recursive expression (assignment expression)

@@ -1,56 +1,57 @@
+use AssignmentOperator::*;
 
 /// A complete program source tree.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct JSProgram<'a> {
-    body: Vec<JSStatement<'a>>
+    pub body: Vec<JSStatement<'a>>
 }
 
 /// Any statement.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum JSStatement<'a> {
     ExpressionStatement(JSExpressionStatement<'a>),
     Declaration(JSDeclaration<'a>),
 }
 
 /// An expression statement, i.e., a statement consisting of a single expression.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct JSExpressionStatement<'a> {
     pub expression: JSExpression<'a>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum JSDeclaration<'a> {
     VariableDeclaration(JSVariableDeclaration<'a>)
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct JSVariableDeclaration<'a> {
-    declarations: Vec<VariableDeclarator<'a>>,
-    kind: Kind::Var,
+    pub declarations: Vec<VariableDeclarator<'a>>,
+    pub kind: Kind,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct VariableDeclarator<'a> {
-    id: &'a str,
-    init: Option<JSExpression<'a>>
+    pub id: &'a str,
+    pub init: Option<JSExpression<'a>>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum JSExpression<'a> {
     Literal(JSLiteral<'a>),
-    AssignmentExpression(JSAssignementExpression),
+    AssignmentExpression(JSAssignmentExpression<'a>),
 }
 
 /// An assignment operator expression.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct JSAssignmentExpression<'a> {
-    pub operator: JSAssignmentOperator,
-    pub left: JSExpression<'a>,
-    pub right: JSExpression<'a>,
+    pub operator: AssignmentOperator,
+    pub left: Box<JSExpression<'a>>,
+    pub right: Box<JSExpression<'a>>,
 }
 
 /// An assignment operator token.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum AssignmentOperator {
     Eq,
     AddEq,
@@ -60,8 +61,22 @@ pub enum AssignmentOperator {
     ModEq,
 }
 
+impl From<&str> for  AssignmentOperator {
+    fn from(op: &str) -> Self {
+        match op {
+            "=" => Eq,
+            "+=" => AddEq,
+            "-=" => SubEq,
+            "*=" => MulEq,
+            "/=" => DivEq,
+            "%=" => ModEq,
+            _=> panic!("Unexpected error")
+        }
+    }
+}
+
 /// A literal token.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum JSLiteral<'a> {
     String(&'a str),
     Boolean(bool),
@@ -70,12 +85,13 @@ pub enum JSLiteral<'a> {
 
 /// This is slightly different from the ES5 grammar which does make the difference between floating
 /// numbers and integers
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum JSNumber {
     Int(i64),
     Float(f64),
 }
 
+#[derive(Debug, Clone)]
 pub enum Kind {
     Var,
 }
