@@ -1,14 +1,23 @@
 #
 A a rust crate for parsing and typing javascript without a name yet.
 
+### Examples : 
+
+To get a string representation of the output AST run  on of the examples javascript file,
+or try with your own code : 
+
+``` 
+cargo run --bin parse src/bin/variable_declaration.js
+```
+
 ## Status
 
 Work in progress. 
 
 ## Todo 
 
-- [ ] add some tests to the parser
-- [ ] add some CI
+- [ ] Add some tests to the parser
+- [ ] Add some CI
 - [ ] implement the whole [ES5 spec](https://github.com/estree/estree/blob/master/es5.md)
    - [ ] Node objects
    - [ ] Identifier
