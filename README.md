@@ -3,7 +3,7 @@ A a rust crate for parsing and typing javascript without a name yet.
 
 ### Examples : 
 
-To get a string representation of the output AST run  on of the examples javascript file,
+To get a string representation of the output AST run  one of the examples javascript file,
 or try with your own code : 
 
 ``` 
