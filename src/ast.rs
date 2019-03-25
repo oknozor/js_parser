@@ -1,4 +1,5 @@
 use AssignmentOperator::*;
+use crate::ast::BinaryOperator::*;
 
 /// A complete program source tree.
 #[derive(Debug, Clone)]
@@ -40,6 +41,7 @@ pub struct VariableDeclarator<'a> {
 pub enum JSExpression<'a> {
     Literal(JSLiteral<'a>),
     AssignmentExpression(JSAssignmentExpression<'a>),
+    BinaryExpression(JSBinaryExpression<'a>),
 }
 
 /// An assignment operator expression.
@@ -50,10 +52,51 @@ pub struct JSAssignmentExpression<'a> {
     pub right: Box<JSExpression<'a>>,
 }
 
+#[derive(Debug, Clone)]
+pub struct JSBinaryExpression<'a> {
+    pub operator: BinaryOperator,
+    pub left: Box<JSExpression<'a>>,
+    pub right: Box<JSExpression<'a>>,
+}
+
+#[derive(Debug, Clone)]
+pub enum BinaryOperator {
+    Eq,
+    NotEq,
+    Lt,
+    LtEq,
+    Gt,
+    GtEq,
+    Add,
+    Sub,
+    Mul,
+    Div,
+    Mod,
+}
+
+impl From<&str> for BinaryOperator {
+    fn from(op: &str) -> Self {
+        match op {
+            "==" => Eq,
+            "!=" => NotEq,
+            ">" => Gt,
+            ">=" => GtEq,
+            "<" => Lt,
+            "<=" => LtEq,
+            "+=" => Add,
+            "-=" => Sub,
+            "*=" => Mul,
+            "/=" => Div,
+            "%=" => Mod,
+            _ => panic!("Unexpected error")
+        }
+    }
+}
+
 /// An assignment operator token.
 #[derive(Debug, Clone)]
 pub enum AssignmentOperator {
-    Eq,
+    AssignEq,
     AddEq,
     SubEq,
     MulEq,
@@ -61,16 +104,16 @@ pub enum AssignmentOperator {
     ModEq,
 }
 
-impl From<&str> for  AssignmentOperator {
+impl From<&str> for AssignmentOperator {
     fn from(op: &str) -> Self {
         match op {
-            "=" => Eq,
+            "=" => AssignEq,
             "+=" => AddEq,
             "-=" => SubEq,
             "*=" => MulEq,
             "/=" => DivEq,
             "%=" => ModEq,
-            _=> panic!("Unexpected error")
+            _ => panic!("Unexpected error")
         }
     }
 }

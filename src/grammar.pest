@@ -14,10 +14,15 @@ variable_declarator = { identifier ~ ("=" ~ expression)? }
 
 
 // Expressions
-expression = { literal | assignment_expression }
+expression = { binary_expression| literal | assignment_expression }
 
-assignment_expression = { identifier ~ assignment_operator ~ expression+ }
+assignment_expression = { identifier ~ assignment_operator ~ binary_expression+ }
 assignment_operator = { "=" | "+=" | "-=" | "*=" |"/=" |"%=" |"<<=" | ">>=" |">>>="|"|=" |"^=" | "&=" }
+/** Todo : handle left recursion or at least fix the possible left members of a bin op
+ *  see https://github.com/PhilippeSigaud/Pegged/wiki/Left-Recursion
+ */
+binary_expression = { literal  ~ binary_operator ~ expression* }
+binary_operator= { "==" | "!=" | "===" | "!==" | "<" | "<=" | ">" | ">=" | "<<" | ">>" | ">>>" | "+" | "-" | "*" | "/" | "%" | "|" | "^" | "&" | "in" | "instanceof" }
 
 // Literals
 literal = { string | bool | number }

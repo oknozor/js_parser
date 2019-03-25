@@ -1,3 +1,4 @@
+#![feature(box_syntax)]
 extern crate pest;
 #[macro_use]
 extern crate pest_derive;
@@ -27,8 +28,8 @@ fn parse_statement(pair: Pair<Rule>) -> JSStatement {
     let inner = pair.into_inner().next().unwrap();
     match inner.as_rule() {
         Rule::expression_statement => JSStatement::ExpressionStatement(JSExpressionStatement {
-            expression: parse_expression(inner),
-        }),
+                expression: parse_expression(inner),
+            }),
         Rule::declaration_statement => JSStatement::Declaration(parse_declaration(inner)),
         _ => panic!("parse statement unexpected token {:?}", inner)
     }
@@ -48,7 +49,7 @@ fn parse_declaration(pair: Pair<Rule>) -> JSDeclaration {
                                            .unwrap()
                                            .as_str();
 
-                                       //Todo: handle optional value in the grammar
+//Todo: handle optional value in the grammar
                                        let mut up = inner_rules.next().unwrap().into_inner();
                                        let expression = up.next().unwrap();
                                        let init = Some(parse_expression(expression));
@@ -99,6 +100,14 @@ fn parse_expression(pair: Pair<Rule>) -> JSExpression {
                 left,
                 operator: AssignmentOperator::from(operator),
                 right,
+            })
+        }
+        Rule::binary_expression => {
+            println!("yep {:?}", pair.clone());
+            JSExpression::BinaryExpression(JSBinaryExpression {
+                operator: BinaryOperator::Add,
+                left: box JSExpression::Literal(JSLiteral::String("a")),
+                right: box JSExpression::Literal(JSLiteral::String("b")),
             })
         }
         _ => panic!("parse expresssion unexpected token {:?}", pair)
